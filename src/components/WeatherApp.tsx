@@ -1,4 +1,4 @@
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, debounce } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getWeatherIcon } from "../utils/icon.util";
 import search from "../assets/images/search.png";
@@ -10,7 +10,7 @@ const API_KEY = "7da80e4684c1ac5af21ff27b6c8df691";
 
 const WeatherApp = () => {
   const [weatherData, setWeatherData] = useState<any>(null);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const fetchWeatherData = async (location: string) => {
@@ -22,6 +22,7 @@ const WeatherApp = () => {
       );
 
       setWeatherData(response.data);
+      setError("");
     } catch (error: any) {
       console.log(error.message);
       setError("Location not found. Please enter a valid location.");
@@ -29,6 +30,20 @@ const WeatherApp = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const debouncedFetchData = debounce(async (newLocation) => {
+    fetchWeatherData(newLocation);
+  }, 1000);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let newLocation = event.target.value;
+
+    if (newLocation.trim() === "") {
+      newLocation = "Dhaka";
+    }
+
+    debouncedFetchData(newLocation);
   };
 
   useEffect(() => {
@@ -46,7 +61,7 @@ const WeatherApp = () => {
               type="text"
               placeholder="Search location"
               className="px-4 border-none outline-none focus:outline-none w-full bg-transparent placeholder:text-gray-500 text-black"
-              // onChange={handleInputChange}
+              onChange={handleInputChange}
             />
           </div>
           {loading ? (
