@@ -1,30 +1,33 @@
 import { CircularProgress, debounce } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { getWeatherIcon } from "../utils/icon.util";
 import search from "../assets/images/search.png";
 import humidity from "../assets/images/humidity.png";
 import wind from "../assets/images/wind.png";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 const API_KEY = "7da80e4684c1ac5af21ff27b6c8df691";
 
 const WeatherApp = () => {
   const [weatherData, setWeatherData] = useState<any>(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [forecastData, setForecastData] = useState<any>(null);
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [forecastError, setForecastError] = useState<string>("");
+  const [forecastLoading, setForecastLoading] = useState<boolean>(false);
 
-  const fetchWeatherData = async (location: string) => {
+  const fetchWeatherData = async (location: string): Promise<void> => {
     setLoading(true);
 
     try {
-      const response = await axios.get(
+      const response: AxiosResponse<any> = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=Metric&appid=${API_KEY}`
       );
 
       setWeatherData(response.data);
       setError("");
     } catch (error: any) {
-      console.log(error.message);
+      console.error(error.message);
       setError("Location not found. Please enter a valid location.");
       setWeatherData(null);
     } finally {
@@ -32,11 +35,29 @@ const WeatherApp = () => {
     }
   };
 
-  const debouncedFetchData = debounce(async (newLocation) => {
+  const fetchForecastWeatherData = async (location: string): Promise<void> => {
+    setForecastLoading(true);
+
+    try {
+      const response: AxiosResponse<any> = await axios.get(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${location}&units=Metric&appid=${API_KEY}`
+      );
+
+      setForecastData(response.data);
+    } catch (error: any) {
+      console.error(error.message);
+      setForecastError("Location not found. Please enter a valid location.");
+    } finally {
+      setForecastLoading(false);
+    }
+  };
+
+  const debouncedFetchData = debounce((newLocation: string): void => {
     fetchWeatherData(newLocation);
+    fetchForecastWeatherData(newLocation);
   }, 1000);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
     let newLocation = event.target.value;
 
     if (newLocation.trim() === "") {
@@ -48,6 +69,7 @@ const WeatherApp = () => {
 
   useEffect(() => {
     fetchWeatherData("Dhaka");
+    fetchForecastWeatherData("Dhaka");
   }, []);
 
   return (
