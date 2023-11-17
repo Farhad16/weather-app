@@ -11,13 +11,22 @@ import {
 import organizeTemperatureData from "../utils/forecast.util";
 
 const LineChartForeCast = ({ forecastData }: { forecastData: any[] }) => {
-  const temperatureData = organizeTemperatureData(forecastData);
+  const temperatureData = organizeTemperatureData(forecastData).slice(1, 6);
 
   return (
     <LineChart width={800} height={300} data={temperatureData}>
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="date" />
-      <YAxis type="number" domain={["dataMin", "dataMax"]} />
+      <XAxis
+        dataKey="date"
+        axisLine={{ stroke: "#fff" }} // Change X-axis line color
+        tick={{ fill: "#fff" }} // Change X-axis tick label color
+      />
+      <YAxis
+        type="number"
+        domain={["dataMin", "dataMax"]}
+        axisLine={{ stroke: "#fff" }} // Change X-axis line color
+        tick={{ fill: "#fff" }} // Change X-axis tick label color
+      />
       <Tooltip />
       <Legend />
       <Line

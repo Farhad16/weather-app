@@ -7,6 +7,9 @@ import wind from "../assets/images/wind.png";
 import axios, { AxiosResponse } from "axios";
 import LineChartForeCast from "./LineChartForeCast";
 import FiveDaysForecast from "./FiveDaysForecast";
+import WeatherCard from "./WeatherCard";
+import dayjs from "dayjs";
+import WeatherToday from "./WeatherToday";
 
 const API_KEY = "7da80e4684c1ac5af21ff27b6c8df691";
 
@@ -75,8 +78,6 @@ const WeatherApp = () => {
     fetchForecastWeatherData("Dhaka");
   }, []);
 
-  console.log(forecastData);
-
   return (
     <div className="min-h-screen px-4 sm:px-8 sm:py-6 py-4 flex flex-col gap-6 items-center justify-center">
       <h2 className="font-semibold text-4xl">
@@ -92,87 +93,56 @@ const WeatherApp = () => {
           onChange={handleInputChange}
         />
       </div>
-      <div className="flex flex-col gap-4 sm:gap-6 w-full">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex flex-col w-full p-6 rounded-xl gap-6 bg-cyan-900 text-white min-h-[300px] sm:min-h-[400px]">
-            {loading ? (
-              <div className="flex item-center justify-center mt-24">
-                <CircularProgress sx={{ color: "white" }} />
-              </div>
-            ) : (
-              weatherData && (
-                <>
-                  <div className="flex flex-col text-center gap-4 items-center justify-center flex-grow flex-1">
-                    <img
-                      src={getWeatherIcon(weatherData.weather[0].icon)}
-                      alt="icon"
-                      className="w-28 h-28 mx-auto"
-                    />
-                    <h1 className="text-6xl">
-                      {Math.floor(weatherData.main.temp)} °c
-                    </h1>
-                    <h2 className="text-5xl">{weatherData.name}</h2>
-                  </div>
 
-                  <div className="flex flex-row justify-between w-full items-center mt-6">
-                    <div className="flex flex-col gap-1">
-                      <div className="flex flex-row items-center gap-2">
-                        <img
-                          src={humidity}
-                          alt="humidity"
-                          className="w-4 h-4"
-                        />
-                        <span className="text-base">
-                          {weatherData.main.humidity}%
-                        </span>
-                      </div>
-                      <span>Humidity</span>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <div className="flex flex-row items-center gap-2">
-                        <img src={wind} alt="wind" className="w-4 h-4" />
-                        <span className="text-base">
-                          {Math.floor(weatherData.wind.speed)} m/s
-                        </span>
-                      </div>
-                      <span>Wind Speed</span>
-                    </div>
-                  </div>
-                </>
-              )
-            )}
-            {!loading && error && <p className="text-gray-200">{error}</p>}
-          </div>
-          <div className="box-container flex flex-col w-full p-6 rounded-xl gap-6 bg-cyan-900 text-white min-h-[300px] sm:min-h-[400px]">
-            {forecastLoading ? (
-              <div className="flex item-center justify-center mt-24">
-                <CircularProgress sx={{ color: "white" }} />
-              </div>
-            ) : (
-              forecastData && (
-                <FiveDaysForecast forecastData={forecastData.list} />
-              )
-            )}
-            {!forecastLoading && forecastError && (
-              <p className="text-gray-200">{forecastError}</p>
-            )}
-          </div>
-        </div>
+      {/* Today's weather */}
 
-        <div className="overflow-x-auto bg-slate-200 box p-6 rounded-lg">
-          {forecastLoading ? (
-            <div className="flex item-center justify-center mt-24">
-              <CircularProgress sx={{ color: "white" }} />
-            </div>
-          ) : (
-            forecastData && (
-              <LineChartForeCast forecastData={forecastData.list} />
-            )
-          )}
-          {!forecastLoading && forecastError && (
-            <p className="text-gray-200">{forecastError}</p>
-          )}
-        </div>
+      <div className="flex flex-col w-full p-6 rounded-xl gap-6 bg-cyan-900 text-white md:mb-0 mb-4">
+        {loading ? (
+          <div className="flex item-center justify-center mt-24">
+            <CircularProgress sx={{ color: "white" }} />
+          </div>
+        ) : (
+          weatherData && (
+            <WeatherToday
+              location={weatherData.name}
+              temperature={weatherData.main.temp}
+              weatherIcon={weatherData.weather[0].icon}
+              humidity={weatherData.main.humidity}
+              windSpeed={weatherData.wind.speed}
+              precipitation={weatherData.main.precipitation}
+            />
+          )
+        )}
+        {!loading && error && <p className="text-gray-200">{error}</p>}
+      </div>
+
+      {/* Line chart */}
+      <div className="overflow-x-auto bg-cyan-900 box p-6 rounded-lg w-full">
+        {forecastLoading ? (
+          <div className="flex item-center justify-center mt-24">
+            <CircularProgress sx={{ color: "white" }} />
+          </div>
+        ) : (
+          forecastData && <LineChartForeCast forecastData={forecastData.list} />
+        )}
+        {!forecastLoading && forecastError && (
+          <p className="text-gray-200">{forecastError}</p>
+        )}
+      </div>
+
+      {/* For five days forecast weather */}
+      <div className="w-full p-6 rounded-xl gap-6 bg-cyan-900 text-white col-span-2">
+        <h2 className="mb-4">Next five days</h2>
+        {forecastLoading ? (
+          <div className="flex item-center justify-center mt-24">
+            <CircularProgress sx={{ color: "white" }} />
+          </div>
+        ) : (
+          forecastData && <FiveDaysForecast forecastData={forecastData.list} />
+        )}
+        {!forecastLoading && forecastError && (
+          <p className="text-gray-200">{forecastError}</p>
+        )}
       </div>
     </div>
   );
