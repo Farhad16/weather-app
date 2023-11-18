@@ -92,7 +92,7 @@ const WeatherApp = () => {
       </div>
 
       {/* Today's weather */}
-      <div className="flex flex-col w-full p-6 rounded-xl gap-6 bg-cyan-800 text-white md:mb-0 mb-4">
+      <div className="flex flex-col w-full p-6 rounded-xl gap-6 bg-cyan-800 text-white md:mb-0 mb-4 min-h-[150px]">
         {loading ? (
           <div className="flex item-center justify-center mt-24">
             <CircularProgress sx={{ color: "white" }} />
@@ -110,11 +110,11 @@ const WeatherApp = () => {
             />
           )
         )}
-        {!loading && error && <p className="text-gray-200">{error}</p>}
+        {!loading && error && <p className="text-red-400 text-lg">{error}</p>}
       </div>
 
       {/* Line chart */}
-      <div className="bg-cyan-800 box p-6 rounded-lg w-full flex flex-col gap-6">
+      <div className="bg-cyan-800 box p-6 rounded-lg w-full flex flex-col gap-6 min-h-[200px]">
         {forecastLoading ? (
           <div className="flex item-center justify-center mt-24">
             <CircularProgress sx={{ color: "white" }} />
@@ -135,7 +135,7 @@ const WeatherApp = () => {
           )
         )}
         {!forecastLoading && forecastError && (
-          <p className="text-gray-200">{forecastError}</p>
+          <p className="text-red-400 text-lg">{forecastError}</p>
         )}
       </div>
     </div>
