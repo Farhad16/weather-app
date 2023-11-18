@@ -67,6 +67,7 @@ const WeatherApp = () => {
     }
 
     debouncedFetchData(newLocation);
+    setSelectedForecast(0);
   };
 
   useEffect(() => {
