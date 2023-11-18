@@ -2,11 +2,11 @@
 
 Clone the repository from [Weather-app](https://github.com/Farhad16/weather-app)
 
-## Or Write the command
+## Then open your terminal and write the command
 
 `git clone https://github.com/Farhad16/weather-app.git`
 
-### Then change the directory
+## Then change the directory
 
 `cd weather-app`
 

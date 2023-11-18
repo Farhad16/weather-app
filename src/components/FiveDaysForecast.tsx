@@ -1,4 +1,3 @@
-import React from "react";
 import organizeTemperatureData from "../utils/forecast.util";
 import dayjs from "dayjs";
 import { getWeatherIcon } from "../utils/icon.util";

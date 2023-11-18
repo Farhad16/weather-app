@@ -1,17 +1,16 @@
-import React from "react";
+import dayjs from "dayjs";
 import {
-  LineChart,
+  CartesianGrid,
+  Label,
+  Legend,
   Line,
+  LineChart,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  Label,
 } from "recharts";
 import organizeTemperatureData from "../utils/forecast.util";
 import { temperatureFormatter } from "../utils/temperature.util";
-import dayjs from "dayjs";
 
 const LineChartForeCast = ({
   forecastData,

@@ -4,7 +4,7 @@ export interface ITemperatureData {
   date: string;
   temperatures: {
     temp: number;
-    time: string; // Add time property
+    time: string;
   }[];
   max_temp: number;
   min_temp: number;
@@ -18,7 +18,7 @@ const organizeTemperatureData = (forecastData: any[]): ITemperatureData[] => {
     [date: string]: {
       temperatures: {
         temp: number;
-        time: string; // Add time property
+        time: string;
       }[];
       humidity: number;
       windSpeed: number;
@@ -29,14 +29,14 @@ const organizeTemperatureData = (forecastData: any[]): ITemperatureData[] => {
   forecastData.forEach((forecast: any) => {
     const date = dayjs(forecast.dt * 1000).format("MMM D, YYYY");
 
-    const time = dayjs(forecast.dt * 1000).format("HH:mm"); // Add time property
+    const time = dayjs(forecast.dt * 1000).format("HH:mm");
 
     if (!groupedData[date]) {
       groupedData[date] = {
         temperatures: [
           {
             temp: forecast.main.temp,
-            time, // Include time property
+            time,
           },
         ],
         humidity: forecast.main.humidity,
@@ -46,7 +46,7 @@ const organizeTemperatureData = (forecastData: any[]): ITemperatureData[] => {
     } else {
       groupedData[date].temperatures.push({
         temp: forecast.main.temp,
-        time, // Include time property
+        time,
       });
     }
   });

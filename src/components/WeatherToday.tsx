@@ -1,4 +1,3 @@
-import React from "react";
 import { getWeatherIcon } from "../utils/icon.util";
 import dayjs from "dayjs";
 
