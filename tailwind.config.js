@@ -3,7 +3,7 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        xs: "400px", // Set your desired width for the xs breakpoint
+        xs: "500px", // Set your desired width for the xs breakpoint
         // ... other breakpoints
       },
     },

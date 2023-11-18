@@ -1,14 +1,9 @@
 import { CircularProgress, debounce } from "@mui/material";
-import { ChangeEvent, useEffect, useState } from "react";
-import { getWeatherIcon } from "../utils/icon.util";
-import search from "../assets/images/search.png";
-import humidity from "../assets/images/humidity.png";
-import wind from "../assets/images/wind.png";
 import axios, { AxiosResponse } from "axios";
-import LineChartForeCast from "./LineChartForeCast";
+import { ChangeEvent, useEffect, useState } from "react";
+import search from "../assets/images/search.png";
 import FiveDaysForecast from "./FiveDaysForecast";
-import WeatherCard from "./WeatherCard";
-import dayjs from "dayjs";
+import LineChartForeCast from "./LineChartForeCast";
 import WeatherToday from "./WeatherToday";
 
 const API_KEY = "7da80e4684c1ac5af21ff27b6c8df691";
@@ -20,6 +15,7 @@ const WeatherApp = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [forecastError, setForecastError] = useState<string>("");
   const [forecastLoading, setForecastLoading] = useState<boolean>(false);
+  const [selectedForecast, setSelectedForecast] = useState(0);
 
   const fetchWeatherData = async (location: string): Promise<void> => {
     setLoading(true);
@@ -78,10 +74,11 @@ const WeatherApp = () => {
     fetchForecastWeatherData("Dhaka");
   }, []);
 
+  console.log(weatherData);
   return (
-    <div className="min-h-screen px-4 sm:px-8 sm:py-6 py-4 flex flex-col gap-6 items-center justify-center">
-      <h2 className="font-semibold text-4xl">
-        Weather View: 5-Day Forecast Explorer
+    <div className="min-h-screen px-4 sm:px-8 sm:py-6 py-4 flex flex-col gap-6 items-center justify-center bg-slate-400">
+      <h2 className="font-bold text-4xl">
+        Weather View: 5-Days Forecast Explorer
       </h2>
       <div className="box bg-slate-200 rounded-full px-6 py-3 items-center flex sm:w-1/2 w-full">
         <img src={search} alt="search" />
@@ -95,8 +92,7 @@ const WeatherApp = () => {
       </div>
 
       {/* Today's weather */}
-
-      <div className="flex flex-col w-full p-6 rounded-xl gap-6 bg-cyan-900 text-white md:mb-0 mb-4">
+      <div className="flex flex-col w-full p-6 rounded-xl gap-6 bg-cyan-800 text-white md:mb-0 mb-4">
         {loading ? (
           <div className="flex item-center justify-center mt-24">
             <CircularProgress sx={{ color: "white" }} />
@@ -109,7 +105,8 @@ const WeatherApp = () => {
               weatherIcon={weatherData.weather[0].icon}
               humidity={weatherData.main.humidity}
               windSpeed={weatherData.wind.speed}
-              precipitation={weatherData.main.precipitation}
+              condition={weatherData.weather[0].main}
+              sys={weatherData.sys}
             />
           )
         )}
@@ -117,13 +114,18 @@ const WeatherApp = () => {
       </div>
 
       {/* Line chart */}
-      <div className="overflow-x-auto bg-cyan-900 box p-6 rounded-lg w-full">
+      <div className="overflow-x-auto bg-cyan-800 box p-6 rounded-lg w-full">
         {forecastLoading ? (
           <div className="flex item-center justify-center mt-24">
             <CircularProgress sx={{ color: "white" }} />
           </div>
         ) : (
-          forecastData && <LineChartForeCast forecastData={forecastData.list} />
+          forecastData && (
+            <LineChartForeCast
+              forecastData={forecastData.list}
+              selectedForecast={selectedForecast}
+            />
+          )
         )}
         {!forecastLoading && forecastError && (
           <p className="text-gray-200">{forecastError}</p>
@@ -131,14 +133,19 @@ const WeatherApp = () => {
       </div>
 
       {/* For five days forecast weather */}
-      <div className="w-full p-6 rounded-xl gap-6 bg-cyan-900 text-white col-span-2">
-        <h2 className="mb-4">Next five days</h2>
+      <div className="w-full p-6 rounded-xl gap-6 bg-cyan-800 text-white col-span-2">
         {forecastLoading ? (
           <div className="flex item-center justify-center mt-24">
             <CircularProgress sx={{ color: "white" }} />
           </div>
         ) : (
-          forecastData && <FiveDaysForecast forecastData={forecastData.list} />
+          forecastData && (
+            <FiveDaysForecast
+              forecastData={forecastData.list}
+              setSelectedForecast={setSelectedForecast}
+              selectedForecast={selectedForecast}
+            />
+          )
         )}
         {!forecastLoading && forecastError && (
           <p className="text-gray-200">{forecastError}</p>

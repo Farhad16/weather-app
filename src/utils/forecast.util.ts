@@ -20,8 +20,6 @@ const organizeTemperatureData = (forecastData: any[]): ITemperatureData[] => {
         temp: number;
         time: string; // Add time property
       }[];
-      max_temp: number;
-      min_temp: number;
       humidity: number;
       windSpeed: number;
       weatherIcon: string;
@@ -41,8 +39,6 @@ const organizeTemperatureData = (forecastData: any[]): ITemperatureData[] => {
             time, // Include time property
           },
         ],
-        max_temp: forecast.main.temp_max,
-        min_temp: forecast.main.temp_min,
         humidity: forecast.main.humidity,
         windSpeed: forecast.wind.speed,
         weatherIcon: forecast.weather[0].icon,
@@ -56,11 +52,15 @@ const organizeTemperatureData = (forecastData: any[]): ITemperatureData[] => {
   });
 
   const result: ITemperatureData[] = Object.keys(groupedData).map((date) => {
+    const temperatures = groupedData[date].temperatures.map(
+      (temp) => temp.temp
+    );
+
     return {
       date,
       temperatures: groupedData[date].temperatures,
-      max_temp: groupedData[date].max_temp,
-      min_temp: groupedData[date].min_temp,
+      max_temp: Math.round(Math.max(...temperatures)),
+      min_temp: Math.round(Math.min(...temperatures)),
       humidity: groupedData[date].humidity,
       windSpeed: groupedData[date].windSpeed,
       weatherIcon: groupedData[date].weatherIcon,
