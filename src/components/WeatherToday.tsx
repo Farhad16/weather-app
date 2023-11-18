@@ -25,8 +25,8 @@ const WeatherToday = ({
   sys,
 }: IWeather) => {
   return (
-    <div className="flex flex-col xs:flex-row justify-between">
-      <div className="flex flex-col">
+    <div className="flex flex-col xs:flex-row justify-between items-center">
+      <div className="flex flex-col gap-2">
         <h2 className="text-3xl">{location}</h2>
         <div className="flex flex-row items-start gap-6">
           <img
@@ -34,7 +34,7 @@ const WeatherToday = ({
             alt="icon"
             className="w-20 h-20"
           />
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-1">
             <h2 className="text-4xl">{Math.round(temperature)}°c</h2>
             <p className="">Humidity: {humidity}%</p>
             <p className="">Wind: {Math.floor(windSpeed * 3.6)} km/h</p>
@@ -42,7 +42,7 @@ const WeatherToday = ({
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        <p className="text-lg">{dayjs(new Date()).format("dddd DD, YYYY")}</p>
+        <p className="text-xl">{dayjs(new Date()).format("dddd DD, YYYY")}</p>
         <p className="">
           Condition: <span>{condition}</span>
         </p>

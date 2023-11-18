@@ -26,7 +26,7 @@ const LineChartForeCast = ({
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 overflow-x-auto">
       <p className="text-xl font-medium text-white">
         {dayjs(temperatureData[selectedForecast].date).format("dddd DD, YYYY")}
       </p>
@@ -54,7 +54,7 @@ const LineChartForeCast = ({
           type="monotone"
           dataKey="temp"
           name="Temperature"
-          stroke="#eee"
+          stroke="#f8ca05"
           strokeWidth={2}
           dot={false}
         />
